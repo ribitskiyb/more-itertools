@@ -134,6 +134,8 @@ These tools combine multiple iterables.
 .. autofunction:: flatten
 .. autofunction:: roundrobin
 .. autofunction:: prepend
+.. autofunction:: prepend_if
+.. autofunction:: append_if
 
 
 Summarizing
