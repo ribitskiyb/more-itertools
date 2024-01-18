@@ -731,6 +731,52 @@ class PrependTests(TestCase):
         self.assertEqual(actual, expected)
 
 
+class PrependIfTests(TestCase):
+    def test_prepends_if_truthy(self):
+        iterable = 'bc'
+        for value in ['a', 1, (42, )]:
+            actual = tuple(mi.prepend_if(value, iterable))
+            self.assertEqual(actual, (value, ) + tuple(iterable))
+
+    def test_doesnt_prepend_if_falsy(self):
+        iterable = 'bc'
+        expected = ('b', 'c')
+        for value in ['', None, 0, ()]:
+            actual = tuple(mi.prepend_if(value, iterable))
+            self.assertEqual(actual, expected)
+
+    def test_prepends_if_condition_is_true(self):
+        actual = '-'.join(mi.prepend_if('A', 'BC', cond=str.isupper))
+        self.assertEqual(actual, 'A-B-C')
+
+    def test_doesnt_prepend_if_condition_is_false(self):
+        actual = '-'.join(mi.prepend_if('A', 'bc', cond=str.islower))
+        self.assertEqual(actual, 'b-c')
+
+
+class AppendIfTests(TestCase):
+    def test_appends_if_truthy(self):
+        iterable = 'bc'
+        for value in ['a', 1, (42, )]:
+            actual = tuple(mi.append_if(value, iterable))
+            self.assertEqual(actual, tuple(iterable) + (value, ))
+
+    def test_doesnt_append_if_falsy(self):
+        iterable = 'bc'
+        expected = ('b', 'c')
+        for value in ['', None, 0, ()]:
+            actual = tuple(mi.append_if(value, iterable))
+            self.assertEqual(actual, expected)
+
+    def test_appends_if_condition_is_true(self):
+        actual = '-'.join(mi.append_if('C', 'AB', cond=str.isupper))
+        self.assertEqual(actual, 'A-B-C')
+
+    def test_doesnt_append_if_condition_is_false(self):
+        actual = '-'.join(mi.append_if('C', 'ab', cond=str.islower))
+        self.assertEqual(actual, 'a-b')
+
+
 class Convolvetests(TestCase):
     def test_moving_average(self):
         signal = iter([10, 20, 30, 40, 50])
