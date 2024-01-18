@@ -56,6 +56,8 @@ __all__ = [
     'polynomial_derivative',
     'powerset',
     'prepend',
+    'prepend_if',
+    'append_if',
     'quantify',
     'reshape',
     'random_combination_with_replacement',
@@ -710,6 +712,42 @@ def prepend(value, iterator):
 
     """
     return chain([value], iterator)
+
+
+def prepend_if(value, iterator, cond=bool):
+    """Yield *value*, followed by the elements in *iterator*, if cond(value) is True. The default
+    condition is that the value is truthy.
+
+        >>> maybe_first_letter = None
+        >>> letters = prepend_if(maybe_first_letter, "bcd")
+        >>> ", ".join(letters)
+        "b, c, d"
+
+    """
+    def new_iterable():
+        if cond(value):
+            yield value
+        yield from iterator
+
+    return new_iterable()
+
+
+def append_if(value, iterator, cond=bool):
+    """Yield elements in *iterator*, followed by the *value*, if cond(value) is True. The default
+    condition is that the value is truthy.
+
+        >>> maybe_another_letter = None
+        >>> letters = append_if(maybe_another_letter, "abc")
+        >>> ", ".join(letters)
+        "a, b, c"
+
+    """
+    def new_iterable():
+        yield from iterator
+        if cond(value):
+            yield value
+
+    return new_iterable()
 
 
 def convolve(signal, kernel):
